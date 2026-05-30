@@ -1,40 +1,29 @@
-import { motion } from 'framer-motion'
-
 export default function ProductCard({ product }: any) {
   return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="bg-white rounded-3xl overflow-hidden shadow-xl"
-    >
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
       <img
         src={product.image}
         alt={product.name}
-        className="h-56 w-full object-cover"
+        className="w-full h-52 object-cover"
       />
 
-      <div className="p-5">
-        <h2 className="text-xl font-bold text-slate-800">
+      <div className="p-4">
+        <h2 className="text-xl font-bold">
           {product.name}
         </h2>
 
-        <p className="text-blue-600 mt-2 font-semibold">
+        <p className="text-blue-600 mt-2">
           {product.code}
         </p>
 
-        <p className="text-slate-500 mt-1">
+        <p className="text-gray-500">
           {product.category}
         </p>
 
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-red-500 text-xl font-bold">
-            {product.price}
-          </span>
-
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl">
-            Xem
-          </button>
-        </div>
+        <p className="text-red-500 font-bold mt-3">
+          {product.price}
+        </p>
       </div>
-    </motion.div>
+    </div>
   )
 }

@@ -1,40 +1,41 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import ProductCard from './components/ProductCard'
+import { products } from './data/products'
 
-export default function ProductCard({ product }: any) {
+export default function App() {
+  const [search, setSearch] = useState('')
+
+  const filtered = products.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase()) ||
+    item.code.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="bg-white rounded-3xl overflow-hidden shadow-xl"
-    >
-      <img
-        src={product.image}
-        alt={product.name}
-        className="h-56 w-full object-cover"
-      />
+    <div className="min-h-screen bg-gray-100">
+      <div className="bg-blue-900 text-white p-8">
+        <h1 className="text-4xl font-bold text-center">
+          VietAutoPart
+        </h1>
 
-      <div className="p-5">
-        <h2 className="text-xl font-bold text-slate-800">
-          {product.name}
-        </h2>
-
-        <p className="text-blue-600 mt-2 font-semibold">
-          {product.code}
-        </p>
-
-        <p className="text-slate-500 mt-1">
-          {product.category}
-        </p>
-
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-red-500 text-xl font-bold">
-            {product.price}
-          </span>
-
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl">
-            Xem
-          </button>
+        <div className="max-w-2xl mx-auto mt-6">
+          <input
+            type="text"
+            placeholder="Nhập mã phụ tùng..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full p-4 rounded-xl text-black"
+          />
         </div>
       </div>
-    </motion.div>
+
+      <div className="grid md:grid-cols-3 gap-6 p-8">
+        {filtered.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
+        ))}
+      </div>
+    </div>
   )
 }
