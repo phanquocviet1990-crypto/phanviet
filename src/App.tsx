@@ -1,242 +1,378 @@
-import { useState, useEffect } from 'react'
-import ProductCard from './components/ProductCard'
-import AdminDashboard from './components/AdminDashboard'
-import { products } from './data/products'
+import Particles from 'react-tsparticles'
+import { useEffect, useState, useRef } from 'react'
 
-export default function App() {
 
-  // LOGIN STATE
-  const [logged, setLogged] = useState(false)
+export default function PhanVietEntertainmentHub() {
+  const [time, setTime] = useState(new Date())
+const audioRef = useRef(null)
+const [playing, setPlaying] = useState(false)
+useEffect(() => {
+  const timer = setInterval(() => {
+    setTime(new Date())
+  }, 1000)
 
-  // MODE
-  const [isRegister, setIsRegister] = useState(false)
+  return () => clearInterval(timer)
+}, [])
 
-  // FORM
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+const currentTime = time.toLocaleTimeString('vi-VN', {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+})
 
-  // SEARCH
-  const [search, setSearch] = useState('')
+const currentDate = time.toLocaleDateString('vi-VN')
+const toggleMusic = () => {
+  if (!audioRef.current) return
 
-  // LOAD LOGIN
-  useEffect(() => {
-    const saved = localStorage.getItem('logged')
-
-    if (saved === 'true') {
-      setLogged(true)
-    }
-  }, [])
-
-  // LOGIN
-  const handleLogin = () => {
-
-    const savedUser = localStorage.getItem('username')
-    const savedPass = localStorage.getItem('password')
-
-    if (
-      username === savedUser &&
-      password === savedPass
-    ) {
-      setLogged(true)
-      localStorage.setItem('logged', 'true')
-    } else {
-      alert('Sai tài khoản hoặc mật khẩu')
-    }
+  if (playing) {
+    audioRef.current.pause()
+  } else {
+    audioRef.current.play()
   }
 
-  // REGISTER
-  const handleRegister = () => {
+  setPlaying(!playing)
+}
+ const menu = [
+  'Home',
+  'Music',
+  'Chat',
+  'Gallery',
+  'Games',
+  'Mood',
+  'Settings',
+]
 
-    if (!username || !password) {
-      alert('Nhập đầy đủ thông tin')
-      return
-    }
+return (
+  <>
+    <audio
+      ref={audioRef}
+      src="/music/song.mp3"
+      loop
+    />
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
+      <Particles
+  options={{
+    background: {
+      color: {
+        value: '#000000',
+      },
+    },
+    fpsLimit: 60,
+    particles: {
+      color: {
+        value: '#00ffff',
+      },
+      links: {
+        color: '#00ffff',
+        distance: 150,
+        enable: true,
+        opacity: 0.2,
+        width: 1,
+      },
+      move: {
+        enable: true,
+        speed: 1,
+      },
+      number: {
+        value: 60,
+      },
+      opacity: {
+        value: 0.3,
+      },
+      size: {
+        value: { min: 1, max: 3 },
+      },
+    },
+  }}
+ className="absolute inset-0 z-0"
+/>
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-black to-cyan-950 opacity-95" />
 
-    localStorage.setItem('username', username)
-    localStorage.setItem('password', password)
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[140px] rounded-full" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-700/20 blur-[120px] rounded-full" />
 
-    alert('Đăng ký thành công')
+      {/* CONTENT */}
+      <div className="relative z-10 p-5 md:p-8">
 
-    setIsRegister(false)
-  }
+        {/* HEADER */}
+        <header className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-5 flex flex-col md:flex-row items-center justify-between shadow-2xl shadow-cyan-500/10">
 
-  // LOGOUT
-  const handleLogout = () => {
-    setLogged(false)
-    localStorage.removeItem('logged')
-  }
-
-  // FILTER
-  const filtered = products.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase()) ||
-    item.code.toLowerCase().includes(search.toLowerCase())
-  )
-
-  // AUTH PAGE
-  if (!logged) {
-    return (
-      <div className="min-h-screen relative overflow-hidden bg-black flex items-center justify-center">
-
-        {/* BACKGROUND */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 via-blue-700 to-black"></div>
-
-        <div className="absolute top-[-100px] left-[-100px] w-[400px] h-[400px] bg-cyan-300/30 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-[-100px] right-[-100px] w-[400px] h-[400px] bg-blue-500/30 rounded-full blur-3xl"></div>
-
-        {/* LOGIN CARD */}
-        <div className="relative z-10 w-full max-w-md p-4">
-
-          <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[40px] p-8 shadow-2xl">
-
-            {/* LOGO */}
-            <div className="flex justify-center">
-
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-cyan-400 to-blue-700 flex items-center justify-center text-white text-4xl font-black shadow-2xl">
-                PV
-              </div>
-
-            </div>
-
-            {/* TITLE */}
-            <h1 className="text-center text-white text-5xl font-black mt-6">
+          <div>
+            <h1 className="text-4xl font-black tracking-widest bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">
               PHAN VIỆT
             </h1>
-
-            <p className="text-center text-cyan-100 mt-3">
-              {isRegister
-                ? 'Tạo tài khoản mới'
-                : 'Đăng nhập để truy cập hệ thống'}
+            <p className="text-gray-400 mt-1">
+              Entertainment Hub
             </p>
-
-            {/* FORM */}
-            <div className="mt-10 space-y-5">
-
-              <input
-                type="text"
-                placeholder="Tên đăng nhập"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full p-5 rounded-2xl bg-white/20 border border-white/20 text-white placeholder:text-slate-200 outline-none focus:border-cyan-300"
-              />
-
-              <input
-                type="password"
-                placeholder="Mật khẩu"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-5 rounded-2xl bg-white/20 border border-white/20 text-white placeholder:text-slate-200 outline-none focus:border-cyan-300"
-              />
-
-              {isRegister ? (
-                <button
-                  onClick={handleRegister}
-                  className="w-full p-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-700 text-white text-xl font-black hover:scale-105 transition-all duration-300"
-                >
-                  Đăng ký
-                </button>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="w-full p-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-700 text-white text-xl font-black hover:scale-105 transition-all duration-300"
-                >
-                  Đăng nhập
-                </button>
-              )}
-
-            </div>
-
-            {/* SWITCH */}
-            <div className="text-center mt-8">
-
-              {isRegister ? (
-                <button
-                  onClick={() => setIsRegister(false)}
-                  className="text-cyan-200 hover:text-white"
-                >
-                  Đã có tài khoản? Đăng nhập
-                </button>
-              ) : (
-                <button
-                  onClick={() => setIsRegister(true)}
-                  className="text-cyan-200 hover:text-white"
-                >
-                  Chưa có tài khoản? Đăng ký
-                </button>
-              )}
-
-            </div>
-
           </div>
 
+          <div className="flex items-center gap-4 mt-5 md:mt-0">
+            <div className="bg-black/40 border border-cyan-400/20 px-5 py-3 rounded-2xl text-center">
+              <p className="text-gray-400 text-sm">Clock</p>
+               {currentDate}
+              <h2 className="text-2xl font-bold text-cyan-300">{currentTime}</h2>
+            </div>
+
+            <div className="bg-black/40 border border-cyan-400/20 px-5 py-3 rounded-2xl text-center">
+              <p className="text-gray-400 text-sm">Weather</p>
+              <h2 className="text-2xl font-bold text-blue-300">27°C ☁</h2>
+            </div>
+
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg shadow-cyan-500/30">
+              V
+            </div>
+          </div>
+        </header>
+
+        {/* MAIN */}
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_320px] gap-6 mt-6">
+
+          {/* LEFT SIDEBAR */}
+          <aside className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-5 h-fit shadow-xl shadow-cyan-500/10">
+            <h2 className="text-xl font-bold text-cyan-300 mb-5">
+              Navigation
+            </h2>
+
+            <div className="space-y-3">
+              {menu.map((item, index) => (
+                <button
+                  key={index}
+                  className="w-full text-left px-4 py-3 rounded-2xl bg-black/30 hover:bg-cyan-500/20 border border-transparent hover:border-cyan-400/40 transition-all duration-300 hover:translate-x-1"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-8 bg-gradient-to-br from-cyan-500/20 to-blue-700/20 rounded-3xl p-5 border border-cyan-400/20">
+              <p className="text-sm text-gray-300">
+                Today Mood
+              </p>
+              <h3 className="text-2xl font-bold mt-2">
+                Chill & Focused 😎
+              </h3>
+            </div>
+          </aside>
+
+          {/* CENTER */}
+          <main className="space-y-6">
+
+            {/* HERO */}
+            <section className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-[32px] p-8 relative overflow-hidden shadow-2xl shadow-blue-500/10">
+
+              <div className="absolute right-0 top-0 w-72 h-72 bg-cyan-500/10 blur-[100px] rounded-full" />
+
+              <div className="relative z-10">
+                <p className="text-cyan-300 uppercase tracking-[5px] text-sm">
+                  Personal Space
+                </p>
+
+                <h1 className="text-5xl md:text-6xl font-black mt-4 leading-tight">
+                  Welcome To
+                  <span className="block bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">
+                    Your Entertainment World
+                  </span>
+                </h1>
+
+                <p className="text-gray-400 max-w-2xl mt-5 text-lg leading-relaxed">
+                  Music, chat, gaming, weather, calendar, relaxing vibes and futuristic dashboard — all inside your own personal cyberpunk universe.
+                </p>
+
+                <div className="flex flex-wrap gap-4 mt-8">
+                  <button className="px-7 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 font-bold shadow-lg shadow-cyan-500/30 hover:scale-105 transition-all duration-300">
+                    Start Listening
+                  </button>
+
+                  <button className="px-7 py-4 rounded-2xl border border-cyan-400/30 bg-black/40 hover:bg-cyan-500/10 transition-all duration-300">
+                    Open Dashboard
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* MUSIC PLAYER */}
+            <section className="grid md:grid-cols-[280px_1fr] gap-6">
+
+              <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-5 shadow-xl shadow-cyan-500/10">
+                <div className="aspect-square rounded-3xl bg-gradient-to-br from-cyan-400 to-blue-700 flex items-center justify-center text-7xl font-black shadow-lg shadow-cyan-500/30">
+                  ♪
+                </div>
+
+                <div className="mt-5">
+                  <h3 className="text-2xl font-bold">
+                    Midnight Drive
+                  </h3>
+                  <p className="text-gray-400 mt-1">
+                    Synthwave Playlist
+                  </p>
+                </div>
+
+                <div className="mt-5 h-2 bg-black/40 rounded-full overflow-hidden">
+                  <div className="w-2/3 h-full bg-gradient-to-r from-cyan-300 to-blue-500 rounded-full" />
+                </div>
+
+                <div className="flex justify-between mt-6">
+                  <button className="w-14 h-14 rounded-full bg-black/40 hover:bg-cyan-500/20 border border-cyan-400/20 text-xl">
+                    ⏮
+                  </button>
+
+                  <button
+  onClick={toggleMusic}
+  className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 text-2xl shadow-lg shadow-cyan-500/30 hover:scale-110 transition-all duration-300"
+>
+  {playing ? '⏸' : '▶'}
+</button>
+
+                  <button className="w-14 h-14 rounded-full bg-black/40 hover:bg-cyan-500/20 border border-cyan-400/20 text-xl">
+                    ⏭
+                  </button>
+                </div>
+              </div>
+
+              {/* FEED */}
+              <div className="space-y-6">
+
+                <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-blue-500/10">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-cyan-300">
+                      Live Status
+                    </h2>
+
+                    <div className="px-4 py-2 rounded-full bg-green-500/20 border border-green-400/20 text-green-300 text-sm">
+                      Online
+                    </div>
+                  </div>
+
+                  <div className="mt-5 space-y-4">
+                    <div className="bg-black/30 rounded-2xl p-4 border border-cyan-400/10">
+                      <p className="text-gray-300 leading-relaxed">
+                        🌌 Late night coding + chill synthwave music.
+                      </p>
+                    </div>
+
+                    <div className="bg-black/30 rounded-2xl p-4 border border-cyan-400/10">
+                      <p className="text-gray-300 leading-relaxed">
+                        🚗 Future project: build the coolest entertainment website in Vietnam.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+
+                  <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-cyan-500/10">
+                    <h3 className="text-xl font-bold text-cyan-300 mb-4">
+                      Quick Chat
+                    </h3>
+
+                    <div className="space-y-3">
+                      <div className="bg-cyan-500/20 p-3 rounded-2xl w-fit max-w-[80%]">
+                        Yo bro 😎
+                      </div>
+
+                      <div className="bg-black/40 p-3 rounded-2xl ml-auto w-fit max-w-[80%]">
+                        Website looking fire 🔥
+                      </div>
+                    </div>
+
+                    <div className="mt-5 flex gap-3">
+                      <input
+                        placeholder="Type a message..."
+                        className="flex-1 bg-black/40 border border-cyan-400/20 rounded-2xl px-4 py-3 outline-none"
+                      />
+
+                      <button className="px-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 font-bold">
+                        Send
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-blue-500/10">
+                    <h3 className="text-xl font-bold text-cyan-300 mb-4">
+                      Calendar
+                    </h3>
+
+                    <div className="grid grid-cols-7 gap-2 text-center text-sm">
+                      {Array.from({ length: 35 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`aspect-square rounded-xl flex items-center justify-center ${
+                            i === 17
+                              ? 'bg-gradient-to-r from-cyan-400 to-blue-600 font-bold'
+                              : 'bg-black/30'
+                          }`}
+                        >
+                          {i + 1 <= 31 ? i + 1 : ''}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+
+          {/* RIGHT SIDEBAR */}
+          <aside className="space-y-6">
+
+            <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-cyan-500/10">
+              <h2 className="text-2xl font-bold text-cyan-300 mb-5">
+                Weather
+              </h2>
+
+              <div className="text-center">
+                <div className="text-7xl">
+                  ☁
+                </div>
+
+                <h3 className="text-5xl font-black mt-4">
+                  27°
+                </h3>
+
+                <p className="text-gray-400 mt-2">
+                  Yen Bai, Vietnam
+                </p>
+              </div>
+            </div>
+
+            <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-blue-500/10">
+              <h2 className="text-2xl font-bold text-cyan-300 mb-5">
+                Notifications
+              </h2>
+
+              <div className="space-y-4">
+                <div className="bg-black/30 p-4 rounded-2xl border border-cyan-400/10">
+                  🎵 New playlist added
+                </div>
+
+                <div className="bg-black/30 p-4 rounded-2xl border border-cyan-400/10">
+                  🌧 Rain expected tonight
+                </div>
+
+                <div className="bg-black/30 p-4 rounded-2xl border border-cyan-400/10">
+                  💬 2 new messages
+                </div>
+              </div>
+            </div>
+
+            <div className="backdrop-blur-xl bg-gradient-to-br from-cyan-500/20 to-blue-700/20 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-cyan-500/10">
+              <h2 className="text-2xl font-bold">
+                Cyber Mode
+              </h2>
+
+              <p className="text-gray-300 mt-3 leading-relaxed">
+                Your futuristic personal entertainment universe is active.
+              </p>
+
+              <button className="mt-5 w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 font-bold shadow-lg shadow-cyan-500/30 hover:scale-105 transition-all duration-300">
+                Activate Effects
+              </button>
+            </div>
+          </aside>
         </div>
-
       </div>
-    )
-  }
-
-  // WEBSITE
-  return (
-    <div className="min-h-screen bg-slate-100">
-
-      {/* MENU */}
-      <div className="bg-black text-white px-8 py-4 flex justify-between items-center">
-
-        <h1 className="text-3xl font-black text-cyan-400">
-          PHAN VIỆT AUTO PART
-        </h1>
-
-        <div className="flex gap-6 items-center">
-          <button>Trang chủ</button>
-          <button>Dashboard</button>
-          <button>Sản phẩm</button>
-          <button>Liên hệ</button>
-
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 px-4 py-2 rounded-xl"
-          >
-            Đăng xuất
-          </button>
-        </div>
-      </div>
-
-      {/* BANNER */}
-      <div className="bg-gradient-to-r from-blue-900 to-cyan-600 text-white p-16 text-center">
-
-        <h2 className="text-6xl font-black">
-          PHỤ TÙNG Ô TÔ
-        </h2>
-
-        <p className="mt-4 text-xl text-blue-100">
-          Tra cứu mã phụ tùng nhanh chóng
-        </p>
-
-        <div className="max-w-2xl mx-auto mt-10">
-
-          <input
-            type="text"
-            placeholder="Nhập mã phụ tùng..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-5 rounded-2xl text-black text-lg shadow-2xl"
-          />
-
-        </div>
-      </div>
-<AdminDashboard total={products.length} />
-      {/* PRODUCTS */}
-      <div className="p-8 grid md:grid-cols-3 gap-8">
-
-        {filtered.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-          />
-        ))}
-
-      </div>
-
-    </div>
-  )
+  </div>
+  </>
+)
 }
