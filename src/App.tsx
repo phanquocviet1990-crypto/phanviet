@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 
 export default function PhanVietEntertainmentHub() {
   const [time, setTime] = useState(new Date())
-const audioRef = useRef(null)
+const audioRef = useRef<HTMLAudioElement | null>(null)
 const [playing, setPlaying] = useState(false)
 useEffect(() => {
   const timer = setInterval(() => {
