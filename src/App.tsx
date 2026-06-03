@@ -41,7 +41,7 @@ const toggleMusic = () => {
 useEffect(() => {
   const API_KEY = 'caff14f27da7fb0684140e139fdec278'
 
-  let intervalId: NodeJS.Timeout | null = null
+  let intervalId: ReturnType<typeof setInterval> | null = null
 
   const fetchWeather = async (lat: number, lon: number) => {
     try {
