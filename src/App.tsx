@@ -1,6 +1,5 @@
 import Particles from '@tsparticles/react'
 import { useEffect, useState, useRef } from 'react'
-import CountUp from 'react-countup'
 import { TypeAnimation } from 'react-type-animation'
 
 
