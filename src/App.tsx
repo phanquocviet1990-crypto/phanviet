@@ -1,4 +1,4 @@
-import Particles from 'react-tsparticles'
+import Particles from '@tsparticles/react'
 import { useEffect, useState, useRef } from 'react'
 
 
@@ -84,7 +84,7 @@ return (
       },
     },
   }}
- className="absolute inset-0 z-0"
+  className="absolute inset-0 z-0"
 />
       {/* BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-black to-cyan-950 opacity-95" />
