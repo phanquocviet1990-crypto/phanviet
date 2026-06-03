@@ -3,8 +3,11 @@ import { useEffect, useState, useRef } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 
 
+
 export default function PhanVietEntertainmentHub() {
   const [time, setTime] = useState(new Date())
+  const [weather, setWeather] = useState<any>(null)
+  const [weatherLoading, setWeatherLoading] = useState(true)
 const audioRef = useRef<HTMLAudioElement | null>(null)
 const [playing, setPlaying] = useState(false)
 const [activePage, setActivePage] = useState('Home')
@@ -35,6 +38,48 @@ const toggleMusic = () => {
 
   setPlaying(!playing)
 }
+useEffect(() => {
+  const API_KEY = 'caff14f27da7fb0684140e139fdec278'
+
+  let intervalId: NodeJS.Timeout | null = null
+
+  const fetchWeather = async (lat: number, lon: number) => {
+    try {
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=vi&appid=${API_KEY}`
+      )
+
+      const data = await res.json()
+
+      if (data.cod === 200) {
+        setWeather(data)
+        setWeatherLoading(false)
+      }
+    } catch (err) {
+      console.error(err)
+      setWeatherLoading(false)
+    }
+  }
+
+  navigator.geolocation.getCurrentPosition((pos) => {
+    const lat = pos.coords.latitude
+    const lon = pos.coords.longitude
+
+    setWeatherLoading(true)
+
+    // load lần đầu
+    fetchWeather(lat, lon)
+
+    // update mỗi 5 phút
+    intervalId = setInterval(() => {
+      fetchWeather(lat, lon)
+    }, 5 * 60 * 1000)
+  })
+
+  return () => {
+    if (intervalId) clearInterval(intervalId)
+  }
+}, [])
  const menu = [
   'Home',
   'Music',
@@ -122,21 +167,23 @@ return (
   />
 </p>
             <p className="text-gray-400 mt-1">
-              Entertainment Hub
+              Mọi thắc mắc liên hệ sđt: 0931.00.1990
             </p>
           </div>
 
-          <div className="flex items-center gap-4 mt-5 md:mt-0">
+          
             <div className="bg-black/40 border border-cyan-400/20 px-5 py-3 rounded-2xl text-center">
-              <p className="text-gray-400 text-sm">Clock</p>
+              <p className="text-gray-400 text-sm">ĐỒNG HỒ</p>
                {currentDate}
               <h2 className="text-2xl font-bold text-cyan-300">{currentTime}</h2>
             </div>
 
             <div className="bg-black/40 border border-cyan-400/20 px-5 py-3 rounded-2xl text-center">
-              <p className="text-gray-400 text-sm">Weather</p>
-              <h2 className="text-2xl font-bold text-blue-300">27°C ☁</h2>
-            </div>
+  <p className="text-gray-400 text-sm">TRẠNG THÁI</p>
+  <h2 className="text-cyan-300 font-bold">
+    Trực tuyến ⚡
+  </h2>
+</div>
 
     <div
   onClick={() => setShowAvatar(true)}
@@ -147,7 +194,6 @@ return (
     alt="Phan Viet"
     className="w-full h-full object-cover"
   />
-</div>
           </div>
         </header>
 
@@ -157,7 +203,7 @@ return (
           {/* LEFT SIDEBAR */}
           <aside className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-5 h-fit shadow-xl shadow-cyan-500/10">
             <h2 className="text-xl font-bold text-cyan-300 mb-5">
-              Navigation
+              Điều hướng
             </h2>
 
             <div className="space-y-3">
@@ -289,7 +335,7 @@ return (
                 <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-blue-500/10">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-cyan-300">
-                      Live Status
+                      Trạng thái trực tiếp
                     </h2>
 
                     <div className="px-4 py-2 rounded-full bg-green-500/20 border border-green-400/20 text-green-300 text-sm">
@@ -371,27 +417,67 @@ return (
 
             <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-cyan-500/10">
               <h2 className="text-2xl font-bold text-cyan-300 mb-5">
-                Weather
+                Thời tiết bây giờ
               </h2>
 
-              <div className="text-center">
-                <div className="text-7xl">
-                  ☁
-                </div>
+             <div className="text-center">
+  {!weatherLoading && weather ? (
+    <>
+    <div className="mt-3 inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-sm">
+  {weather.weather[0].main}
+</div>
+      {/* ICON */}
+      <img
+        src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}
+        alt="weather"
+        className="mx-auto drop-shadow-[0_0_20px_#00ffff]"
+      />
 
-                <h3 className="text-5xl font-black mt-4">
-                  27°
-                </h3>
+      {/* TEMP */}
+      <h3 className="text-5xl font-black text-cyan-300">
+        {Math.round(weather.main.temp)}°
+      </h3>
 
-                <p className="text-gray-400 mt-2">
-                  Yen Bai, Vietnam
-                </p>
-              </div>
+      {/* FEELS LIKE */}
+      <p className="text-gray-300 mt-2">
+        Cảm giác như {Math.round(weather.main.feels_like)}°
+      </p>
+
+      {/* DESCRIPTION */}
+      <p className="text-cyan-200 mt-2 capitalize">
+        {weather.weather[0].description}
+      </p>
+
+      {/* STATUS BADGE */}
+      <div className="mt-3 inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-sm">
+        {weather.weather[0].main}
+      </div>
+
+      {/* LOCATION */}
+      <p className="text-gray-400 mt-3">
+        📍 {weather.name}, {weather.sys.country}
+      </p>
+
+      {/* EXTRA INFO */}
+      <div className="mt-5 space-y-2 text-gray-300 text-sm">
+        <p>💧 Độ ẩm: {weather.main.humidity}%</p>
+        <p>🌬 Tốc độ gió: {weather.wind.speed} m/s</p>
+        <p>🌡 Áp suất: {weather.main.pressure} hPa</p>
+      </div>
+    </>
+  ) : (
+    <div>
+      <div className="animate-pulse text-5xl">⛅</div>
+      <p className="mt-4 text-gray-300">Đang tải thời tiết...</p>
+    </div>
+  )}
+</div>
+  
             </div>
 
             <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-blue-500/10">
               <h2 className="text-2xl font-bold text-cyan-300 mb-5">
-                Notifications
+                Thông báo
               </h2>
 
               <div className="space-y-4">
@@ -411,7 +497,7 @@ return (
 
             <div className="backdrop-blur-xl bg-gradient-to-br from-cyan-500/20 to-blue-700/20 border border-cyan-400/20 rounded-3xl p-6 shadow-xl shadow-cyan-500/10">
               <h2 className="text-2xl font-bold">
-                Cyber Mode
+                Chế độ Cyber
               </h2>
 
               <p className="text-gray-300 mt-3 leading-relaxed">
@@ -446,6 +532,7 @@ return (
       </button>
     </div>
   </div>
-)}</>
+)
+}</>
 )
 }
