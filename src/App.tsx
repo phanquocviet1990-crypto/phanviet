@@ -1,11 +1,15 @@
 import Particles from '@tsparticles/react'
 import { useEffect, useState, useRef } from 'react'
+import CountUp from 'react-countup'
+import { TypeAnimation } from 'react-type-animation'
 
 
 export default function PhanVietEntertainmentHub() {
   const [time, setTime] = useState(new Date())
 const audioRef = useRef<HTMLAudioElement | null>(null)
 const [playing, setPlaying] = useState(false)
+const [activePage, setActivePage] = useState('Home')
+const [showAvatar, setShowAvatar] = useState(false)
 useEffect(() => {
   const timer = setInterval(() => {
     setTime(new Date())
@@ -43,6 +47,7 @@ const toggleMusic = () => {
 ]
 
 return (
+  
   <>
     <audio
       ref={audioRef}
@@ -102,6 +107,21 @@ return (
             <h1 className="text-4xl font-black tracking-widest bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-transparent">
               PHAN VIỆT
             </h1>
+            <p className="text-cyan-300 mt-2">
+  <TypeAnimation
+    sequence={[
+      'Chào mừng đến với website!',
+      2000,
+      'Rất vui vì bạn đã ghé thăm',
+      2000,
+      'Chúc bạn vui vẻ!! ^.^',
+      2000,
+    ]}
+    wrapper="span"
+    speed={50}
+    repeat={Infinity}
+  />
+</p>
             <p className="text-gray-400 mt-1">
               Entertainment Hub
             </p>
@@ -119,9 +139,16 @@ return (
               <h2 className="text-2xl font-bold text-blue-300">27°C ☁</h2>
             </div>
 
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-2xl font-bold shadow-lg shadow-cyan-500/30">
-              V
-            </div>
+    <div
+  onClick={() => setShowAvatar(true)}
+  className="w-16 h-16 rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_20px_#00ffff] cursor-pointer"
+>
+  <img
+    src="/avatar.jpg"
+    alt="Phan Viet"
+    className="w-full h-full object-cover"
+  />
+</div>
           </div>
         </header>
 
@@ -135,14 +162,20 @@ return (
             </h2>
 
             <div className="space-y-3">
-              {menu.map((item, index) => (
-                <button
-                  key={index}
-                  className="w-full text-left px-4 py-3 rounded-2xl bg-black/30 hover:bg-cyan-500/20 border border-transparent hover:border-cyan-400/40 transition-all duration-300 hover:translate-x-1"
-                >
-                  {item}
-                </button>
-              ))}
+             {menu.map((item, index) => (
+  <button
+    key={index}
+    onClick={() => setActivePage(item)}
+    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 hover:translate-x-1
+    ${
+      activePage === item
+        ? 'bg-cyan-500/20 border border-cyan-400 text-cyan-300'
+        : 'bg-black/30 border border-transparent hover:bg-cyan-500/20 hover:border-cyan-400/40'
+    }`}
+  >
+    {item}
+  </button>
+))}
             </div>
 
             <div className="mt-8 bg-gradient-to-br from-cyan-500/20 to-blue-700/20 rounded-3xl p-5 border border-cyan-400/20">
@@ -159,6 +192,27 @@ return (
           <main className="space-y-6">
 
             {/* HERO */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <div className="bg-white/5 border border-cyan-400/20 rounded-3xl p-5">
+    <p className="text-gray-400">Visitors</p>
+    <h2 className="text-3xl font-bold text-cyan-300">12,450</h2>
+  </div>
+
+  <div className="bg-white/5 border border-cyan-400/20 rounded-3xl p-5">
+    <p className="text-gray-400">Songs</p>
+    <h2 className="text-3xl font-bold text-cyan-300">248</h2>
+  </div>
+
+  <div className="bg-white/5 border border-cyan-400/20 rounded-3xl p-5">
+    <p className="text-gray-400">Projects</p>
+    <h2 className="text-3xl font-bold text-cyan-300">18</h2>
+  </div>
+
+  <div className="bg-white/5 border border-cyan-400/20 rounded-3xl p-5">
+    <p className="text-gray-400">Messages</p>
+    <h2 className="text-3xl font-bold text-cyan-300">36</h2>
+  </div>
+</div>
             <section className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-[32px] p-8 relative overflow-hidden shadow-2xl shadow-blue-500/10">
 
               <div className="absolute right-0 top-0 w-72 h-72 bg-cyan-500/10 blur-[100px] rounded-full" />
@@ -373,6 +427,26 @@ return (
         </div>
       </div>
   </div>
-  </>
+  {showAvatar && (
+  <div
+    onClick={() => setShowAvatar(false)}
+    className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+  >
+    <div className="relative">
+      <img
+        src="/avatar.jpg"
+        alt="Phan Viet"
+        className="max-w-[90vw] max-h-[90vh] rounded-3xl border-2 border-cyan-400 shadow-[0_0_40px_#00ffff]"
+      />
+
+      <button
+        onClick={() => setShowAvatar(false)}
+        className="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-red-500 text-white font-bold"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+)}</>
 )
 }
