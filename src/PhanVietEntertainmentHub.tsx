@@ -39,19 +39,29 @@ const [volume, setVolume] = useState(70)
 const [currentTimeAudio, setCurrentTimeAudio] = useState(0)
 const [duration, setDuration] = useState(0)
 
-useEffect(() => {
-  if (audioRef.current) {
-    audioRef.current.volume = volume / 100
-  }
-}, [currentSong, volume])
-useEffect(() => {
-  console.log('Volume:', volume)
 
-  if (audioRef.current) {
-    audioRef.current.volume = volume / 100
-    console.log('Audio volume:', audioRef.current.volume)
-  }
+
+
+useEffect(() => {
+  const audio = audioRef.current
+
+  if (!audio) return
+
+  audio.volume = volume / 100
+
+  console.log(
+    'Volume set:',
+    volume,
+    '=>',
+    audio.volume
+  )
 }, [volume])
+
+
+
+
+
+
 useEffect(() => {
   const timer = setInterval(() => {
     setTime(new Date())
@@ -110,6 +120,15 @@ const prevSong = async () => {
     setPlaying(true)
   }, 100)
 }
+
+
+
+
+
+
+
+
+
 useEffect(() => {
   const audio = audioRef.current
 
@@ -131,6 +150,12 @@ useEffect(() => {
     audio.removeEventListener('loadedmetadata', loaded)
   }
 }, [currentSong])
+
+
+
+
+
+
 useEffect(() => {
   const startMusic = async () => {
     if (!audioRef.current) return
@@ -150,6 +175,13 @@ useEffect(() => {
   return () =>
     document.removeEventListener('click', startMusic)
 }, [])
+
+
+
+
+
+
+
 useEffect(() => {
   const API_KEY = 'caff14f27da7fb0684140e139fdec278'
 
@@ -515,22 +547,29 @@ return (
   Âm lượng: {volume}%
 </p>
 
-     <input
+
+
+
+
+
+
+   <input
   type="range"
   min="0"
   max="100"
+  step="1"
   value={volume}
   onChange={(e) => {
     const newVolume = Number(e.target.value)
-
     setVolume(newVolume)
-
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume / 100
-    }
   }}
   className="w-full accent-cyan-400"
 />
+
+
+
+
+
       </div>
 
     </div>
@@ -623,11 +662,11 @@ return (
 
                     <div className="space-y-3">
                       <div className="bg-cyan-500/20 p-3 rounded-2xl w-fit max-w-[80%]">
-                        Yo bro 😎
+                        Ê bro 😎
                       </div>
 
                       <div className="bg-black/40 p-3 rounded-2xl ml-auto w-fit max-w-[80%]">
-                        Website looking fire 🔥
+                        Web bạn trông cháy quá 🔥
                       </div>
                     </div>
 
@@ -638,7 +677,7 @@ return (
                       />
 
                       <button className="px-5 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 font-bold">
-                        Send
+                        Gửi
                       </button>
                     </div>
                   </div>
