@@ -36,6 +36,9 @@ const [activePage, setActivePage] = useState('Home')
 const [showAvatar, setShowAvatar] = useState(false)
 const [darkMode] = useState(true)
 const [volume, setVolume] = useState(70)
+const [currentTimeAudio, setCurrentTimeAudio] = useState(0)
+const [duration, setDuration] = useState(0)
+
 useEffect(() => {
   if (audioRef.current) {
     audioRef.current.volume = volume / 100
@@ -99,6 +102,27 @@ const prevSong = async () => {
     setPlaying(true)
   }, 100)
 }
+useEffect(() => {
+  const audio = audioRef.current
+
+  if (!audio) return
+
+  const updateTime = () => {
+    setCurrentTimeAudio(audio.currentTime)
+  }
+
+  const loaded = () => {
+    setDuration(audio.duration)
+  }
+
+  audio.addEventListener('timeupdate', updateTime)
+  audio.addEventListener('loadedmetadata', loaded)
+
+  return () => {
+    audio.removeEventListener('timeupdate', updateTime)
+    audio.removeEventListener('loadedmetadata', loaded)
+  }
+}, [currentSong])
 useEffect(() => {
   const startMusic = async () => {
     if (!audioRef.current) return
@@ -168,8 +192,13 @@ useEffect(() => {
   'Games',
   'Mood',
   'Settings',
-]
+] 
+const formatTime = (time: number) => {
+  const mins = Math.floor(time / 60)
+  const secs = Math.floor(time % 60)
 
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}
 return (
   
   <>
@@ -398,13 +427,23 @@ return (
       {/* Progress */}
       <div className="mt-8">
         <div className="flex justify-between text-sm text-gray-400 mb-2">
-          <span>01:24</span>
-          <span>03:45</span>
+          <span>{formatTime(currentTimeAudio)}</span>
+<span>{formatTime(duration)}</span>
         </div>
 
-        <div className="h-3 bg-black/40 rounded-full overflow-hidden">
-          <div className="w-1/2 h-full bg-gradient-to-r from-cyan-300 to-blue-500 rounded-full" />
-        </div>
+        <input
+  type="range"
+  min="0"
+  max={duration || 0}
+  value={currentTimeAudio}
+  onChange={(e) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Number(e.target.value)
+      setCurrentTimeAudio(Number(e.target.value))
+    }
+  }}
+  className="w-full accent-cyan-400"
+/>
       </div>
 
       {/* Controls */}
@@ -437,8 +476,8 @@ return (
       <div className="mt-8">
 
         <p className="text-gray-400 mb-2">
-          Âm lượng
-        </p>
+  Âm lượng: {volume}%
+</p>
 
         <input
   type="range"
