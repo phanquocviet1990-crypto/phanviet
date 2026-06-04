@@ -34,9 +34,7 @@ const songs = [
 const [currentSong, setCurrentSong] = useState(0)
 const [activePage, setActivePage] = useState('Home')
 const [showAvatar, setShowAvatar] = useState(false)
-const [darkMode, setDarkMode] = useState(true)
-const [aiQuestion, setAiQuestion] = useState('')
-const [aiAnswer, setAiAnswer] = useState('Xin chào! Tôi là AI Assistant của Phan Việt.')
+const [darkMode] = useState(true)
 const [volume, setVolume] = useState(70)
 useEffect(() => {
   if (audioRef.current) {
