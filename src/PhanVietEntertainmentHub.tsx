@@ -473,10 +473,14 @@ return (
   <div className="flex flex-col md:flex-row gap-6 items-center">
 
     <img
-      src={songs[currentSong].cover}
-      alt="Album"
-      className="w-56 h-56 rounded-3xl object-cover border border-cyan-400 shadow-[0_0_30px_#00ffff]"
-    />
+  src={songs[currentSong].cover}
+  alt="Album"
+  className={`w-56 h-56 rounded-full object-cover border-4 border-cyan-400 shadow-[0_0_30px_#00ffff]
+  ${playing ? 'animate-spin' : ''}`}
+  style={{
+    animationDuration: '8s',
+  }}
+/>
 
     <div className="flex-1 w-full">
 
@@ -488,30 +492,65 @@ return (
        {songs[currentSong].title}
       </h2>
 
-      <p className="text-gray-400 mt-2">
-        {songs[currentSong].artist}
-      </p>
+      <p className="text-sm text-cyan-400 mt-2 bg-cyan-500/10 px-3 py-2 rounded-xl inline-block">
+  ⏭ Tiếp theo: {songs[(currentSong + 1) % songs.length].title}
+</p>
+
+{playing && (
+  <div className="flex items-end gap-1 mt-4 h-10">
+    {[...Array(20)].map((_, i) => (
+      <div
+        key={i}
+        className="w-1 bg-cyan-400 animate-pulse rounded-full"
+        style={{
+          height: `${20 + Math.random() * 40}px`,
+          animationDelay: `${i * 0.1}s`,
+        }}
+      />
+    ))}
+  </div>
+)}
+
 
       {/* Progress */}
-      <div className="mt-8">
-        <div className="flex justify-between text-sm text-gray-400 mb-2">
-          <span>{formatTime(currentTimeAudio)}</span>
-<span>{formatTime(duration)}</span>
-        </div>
+      
 
-        <input
-  type="range"
-  min="0"
-  max={duration || 0}
-  value={currentTimeAudio}
-  onChange={(e) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = Number(e.target.value)
-      setCurrentTimeAudio(Number(e.target.value))
-    }
-  }}
-  className="w-full accent-cyan-400"
-/>
+
+
+<div className="mt-8">
+
+  <div className="flex justify-between text-sm text-gray-400 mb-2">
+    <span>{formatTime(currentTimeAudio)}</span>
+    <span>{formatTime(duration)}</span>
+  </div>
+
+  <input
+    type="range"
+    min="0"
+    max={duration || 0}
+    value={currentTimeAudio}
+    onChange={(e) => {
+      const time = Number(e.target.value)
+
+      if (audioRef.current) {
+        audioRef.current.currentTime = time
+      }
+
+      setCurrentTimeAudio(time)
+    }}
+    className="w-full accent-cyan-400"
+  />
+
+</div>
+
+
+
+
+
+
+      
+
+        
       </div>
 
       {/* Controls */}
@@ -574,16 +613,35 @@ return (
 
     </div>
 
-  </div>
 
 </section>
 <div className="backdrop-blur-xl bg-white/5 border border-cyan-400/20 rounded-3xl p-6 mt-6">
 
-  <h2 className="text-2xl font-bold text-cyan-300 mb-5">
-    Playlist
-  </h2>
+  <div className="flex justify-between items-center mb-5">
+ <div className="flex justify-between items-center mb-5">
 
-  <div className="space-y-3">
+  <div>
+    <h2 className="text-2xl font-bold text-cyan-300">
+      🎵 Danh Sách Nhạc
+    </h2>
+
+    <p className="text-gray-400 text-sm">
+      {songs.length} bài hát
+    </p>
+  </div>
+
+  <div className="text-cyan-400">
+    ▶ Đang phát
+  </div>
+
+</div>
+
+  <span className="text-gray-400 text-sm">
+    {songs.length} bài hát
+  </span>
+</div>
+
+  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
 
     {songs.map((song, index) => (
       <button
@@ -596,27 +654,42 @@ return (
     setPlaying(true)
   }, 100)
 }}
-        className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all
+        className={`w-full flex items-center gap-4 p-3 rounded-2xl transition-all duration-300 hover:scale-[1.02] hover:translate-x-1
         ${
           currentSong === index
-            ? 'bg-cyan-500/20 border border-cyan-400'
+            ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400 shadow-[0_0_20px_#00ffff]'
             : 'bg-black/30 hover:bg-cyan-500/10'
         }`}
       >
+        <div className="text-cyan-400 font-bold w-8">
+  {(index + 1).toString().padStart(2, '0')}
+</div>
         <img
           src={song.cover}
           className="w-14 h-14 rounded-xl object-cover"
         />
 
-        <div className="text-left">
-          <h3 className="font-bold">
-            {song.title}
-          </h3>
+       <div className="text-left flex-1">
 
-          <p className="text-sm text-gray-400">
-            {song.artist}
-          </p>
-        </div>
+  <div className="flex items-center gap-2">
+
+    <h3 className="font-bold">
+      {song.title}
+    </h3>
+
+    {currentSong === index && playing && (
+      <span className="text-green-400 animate-pulse">
+        🎵
+      </span>
+    )}
+
+  </div>
+
+  <p className="text-sm text-gray-400">
+    {song.artist}
+  </p>
+
+</div>
 
       </button>
     ))}
