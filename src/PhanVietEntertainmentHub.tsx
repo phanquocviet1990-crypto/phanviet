@@ -43,6 +43,14 @@ useEffect(() => {
   if (audioRef.current) {
     audioRef.current.volume = volume / 100
   }
+}, [currentSong, volume])
+useEffect(() => {
+  console.log('Volume:', volume)
+
+  if (audioRef.current) {
+    audioRef.current.volume = volume / 100
+    console.log('Audio volume:', audioRef.current.volume)
+  }
 }, [volume])
 useEffect(() => {
   const timer = setInterval(() => {
@@ -206,6 +214,7 @@ return (
   ref={audioRef}
   src={songs[currentSong].file}
   onEnded={nextSong}
+  volume={volume / 100}
 />
     <div className={`min-h-screen overflow-hidden relative transition-all duration-500 ${darkMode ? "bg-black text-white" : "bg-slate-100 text-slate-900"}`}>
       <Particles
@@ -479,12 +488,20 @@ return (
   Âm lượng: {volume}%
 </p>
 
-        <input
+     <input
   type="range"
   min="0"
   max="100"
   value={volume}
-  onChange={(e) => setVolume(Number(e.target.value))}
+  onChange={(e) => {
+    const newVolume = Number(e.target.value)
+
+    setVolume(newVolume)
+
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume / 100
+    }
+  }}
   className="w-full accent-cyan-400"
 />
       </div>
