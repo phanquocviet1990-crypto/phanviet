@@ -207,6 +207,31 @@ const formatTime = (time: number) => {
 
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 return (
   
   <>
@@ -214,8 +239,10 @@ return (
   ref={audioRef}
   src={songs[currentSong].file}
   onEnded={nextSong}
-  volume={volume / 100}
 />
+
+
+
     <div className={`min-h-screen overflow-hidden relative transition-all duration-500 ${darkMode ? "bg-black text-white" : "bg-slate-100 text-slate-900"}`}>
       <Particles
   options={{
